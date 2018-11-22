@@ -3,7 +3,8 @@ Overview of vavr Option API.
 
 _Reference_: http://www.vavr.io/vavr-docs/#_option  
 _Reference_: https://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Option.html  
-_Reference_: https://softwaremill.com/do-we-have-better-option-here/
+_Reference_: https://softwaremill.com/do-we-have-better-option-here/  
+_Reference_: http://blog.vavr.io/the-agonizing-death-of-an-astronaut/  
 
 # project description
 Vavr Option is object similar to java 8 Optional, but with
