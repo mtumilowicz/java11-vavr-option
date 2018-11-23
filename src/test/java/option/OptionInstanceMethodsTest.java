@@ -1,40 +1,51 @@
 package option;
 
+import io.vavr.PartialFunction;
 import io.vavr.control.Option;
 import org.junit.Test;
+
+import static java.util.Objects.isNull;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by mtumilowicz on 2018-11-22.
  */
 public class OptionInstanceMethodsTest {
-    @Test
-    public void x() {
-//        Option.of("a").get();
-//        Option.of("a").collect();
-        Option.of("a").get();
-//        Option.of("a").eq();
-//        Option.of("a").filter();
-//        Option.of("a").flatMap();
-//        Option.of("a").getOrElse();
-//        Option.of("a").getOrElseThrow();
-//        Option.of("a").isLazy();
-//        Option.of("a").isSingleValued();
-//        Option.of("a").map();
-//        Option.of("a").orElse();
-//        Option.of("a").peek();         Option.of("a").onEmpty();
-//        Option.of("a").transform();
-//        Option.of("a").contains();
-//        Option.of("a").corresponds();
-
-//        Option.of("a").exists()
-//        Option.of("a").forAll()
-//        Option.of("a").forEach();
-//        Option.of("a").getOrElseTry()
-//        Option.of("a").getOrNull()
     
+    @Test
+    public void collect_isDefined() {
+        PartialFunction<String, Integer> length = new PartialFunction<>() {
+
+            @Override
+            public Integer apply(String s) {
+                return isNull(s) ? 0 : s.length();
+            }
+
+            @Override
+            public boolean isDefinedAt(String value) {
+                return true;
+            }
+        };
         
-        Option.of(Option.of("a"))
-//                .flatMap(x -> x)
-                .stdout();
+        assertThat(Option.of("a").collect(length), is(Option.some(1)));
+    }
+
+    @Test
+    public void collect_isNotDefined() {
+        PartialFunction<String, Integer> length = new PartialFunction<>() {
+
+            @Override
+            public Integer apply(String s) {
+                return isNull(s) ? 0 : s.length();
+            }
+
+            @Override
+            public boolean isDefinedAt(String value) {
+                return false;
+            }
+        };
+
+        assertThat(Option.of("a").collect(length), is(Option.none()));
     }
 }
