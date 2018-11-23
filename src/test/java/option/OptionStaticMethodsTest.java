@@ -1,3 +1,5 @@
+package option;
+
 import io.vavr.collection.Seq;
 import io.vavr.control.Option;
 import org.junit.Test;
@@ -7,8 +9,7 @@ import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by mtumilowicz on 2018-11-22.
@@ -42,6 +43,18 @@ public class OptionStaticMethodsTest {
     }
     
     @Test
+    public void none_singleton() {
+        assertSame(Option.none(), Option.none());
+    }
+
+    @Test
+    public void of_notNull() {
+        Option<Object> option = Option.of("a");
+
+        assertThat(option.get(), is("a"));
+    }
+    
+    @Test
     public void of_null() {
         Option<Object> option = Option.of(null);
         
@@ -68,6 +81,7 @@ public class OptionStaticMethodsTest {
         Option<Object> some = Option.some(null);
 
         assertTrue(some.isDefined());
+        assertNull(some.get());
     }
 
     @Test
@@ -78,18 +92,25 @@ public class OptionStaticMethodsTest {
     }
     
     @Test
-    public void when_odd() {
-        int x = 5;
-        Option<Integer> when = Option.when(x % 2 == 0, x);
-
+    public void when_false() {
+        Option<Integer> when = Option.when(false, 1);
         assertTrue(when.isEmpty());
     }
 
     @Test
-    public void when_even() {
-        int x = 5;
-        Option<Integer> when = Option.when(x % 2 == 1, x);
-
+    public void when_true() {
+        Option<Integer> when = Option.when(true, 1);
         assertTrue(when.isDefined());
+    }
+    
+    @Test
+    public void when_null() {
+        Option<Integer> when = Option.when(true, (Integer) null);
+        assertTrue(when.isDefined());
+    }
+    
+    @Test(expected = NullPointerException.class)
+    public void ofOptional_null() {
+        Option.ofOptional(null);
     }
 }
