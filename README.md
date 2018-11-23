@@ -6,6 +6,26 @@ _Reference_: https://static.javadoc.io/io.vavr/vavr/0.9.2/io/vavr/control/Option
 _Reference_: https://softwaremill.com/do-we-have-better-option-here/  
 _Reference_: http://blog.vavr.io/the-agonizing-death-of-an-astronaut/  
 
+# preface
+`Option` is a monadic container type which represents 
+an optional value. Instances of `Option` are either an 
+instance of `Option.Some` or the singleton `Option.None`.
+
+f you’re coming to `Vavr` after using Java’s `Optional` class, 
+there is a crucial difference. In `Optional`, a call to 
+`.map` that results in a null will result in an empty 
+`Optional`. In `Vavr`, it would result in a `Some(null)` that 
+can then lead to a `NullPointerException`.
+
+This seems like Vavr’s implementation is broken, but in 
+fact it’s not - rather, it adheres to the requirement 
+of a monad to maintain computational context when 
+calling `.map`. In terms of an `Option`, this means that 
+calling `.map` on a `Some` will result in a `Some`, and 
+calling `.map` on a `None` will result in a `None`. In the 
+Java `Optional` example above, that context changed from 
+a `Some` to a `None`.
+
 # project description
 Vavr Option is object similar to java 8 Optional, but with
 some significant differences (we will describe it later).
