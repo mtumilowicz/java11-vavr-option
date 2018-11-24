@@ -105,3 +105,7 @@ Creates `Some` of value if condition is true, or `None` in other case
     Option<Integer> when = Option.when(true, (Integer) null);
     assertTrue(when.isDefined());
     ```
+## instance
+* `Option<R>	collect(PartialFunction<? super T,? extends R> partialFunction)` - 
+Collects value that is in the domain of the given partialFunction by mapping the value to type R.
+* 
