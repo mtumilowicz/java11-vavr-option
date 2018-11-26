@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/java11-vavr-option.svg?branch=master)](https://travis-ci.com/mtumilowicz/java11-vavr-option)
+
 # java11-vavr-option
 Overview of vavr Option API.
 
