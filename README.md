@@ -172,7 +172,7 @@ statements:
     AtomicBoolean invokedOnEmpty = new AtomicBoolean();
     
     Option.of(1).peek(x -> invokedPeek.set(true))
-            .onEmpty(() -> invokedOnEmpty.set(false));
+            .onEmpty(() -> invokedOnEmpty.set(true));
     
     assertTrue(invokedPeek.get());
     assertFalse(invokedOnEmpty.get());
@@ -182,7 +182,7 @@ statements:
     AtomicBoolean invokedOnEmpty = new AtomicBoolean();
     
     Option.none().peek(x -> invokedPeek.set(true))
-            .onEmpty(() -> invokedOnEmpty.set(false));
+            .onEmpty(() -> invokedOnEmpty.set(true));
     
     assertFalse(invokedPeek.get());
     assertTrue(invokedOnEmpty.get());
