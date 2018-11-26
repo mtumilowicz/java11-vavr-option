@@ -3,10 +3,7 @@ package option;
 import io.vavr.control.Option;
 import org.junit.Test;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
@@ -176,12 +173,12 @@ public class OptionInstanceMethodsTest {
         assertFalse(invokedPeek.get());
         assertThat(value, is(-1));
     }
-    
+
     @Test
     public void transform_isDefined() {
         var collection = Option.of(1)
                 .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
-        
+
         assertThat(collection, is(List.of(1)));
     }
 
