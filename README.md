@@ -90,7 +90,7 @@ Creates a new `Some` of a given value.
     Option.some(null); // = Some(null)
     ```
 * `Option<T>	when(boolean condition, Supplier<? extends T> supplier)` - 
-Creates Some of suppliers value if condition is true, or `None` in other case
+Creates `Some` of suppliers value if condition is true, or `None` in other case
 * `Option<T>	when(boolean condition, T value)` - 
 Creates `Some` of value if condition is true, or `None` in other case
     ```
@@ -107,7 +107,8 @@ Creates `Some` of value if condition is true, or `None` in other case
     ```
 ## instance
 * `Option<R>	collect(PartialFunction<? super T,? extends R> partialFunction)` - 
-Collects value that is in the domain of the given partialFunction by mapping the value to type R.
+Collects value that is in the domain of the given 
+`partialFunction` by mapping the value to type `R`.
 * `boolean	equals(Object o)` - if `Some` call `equals` on values
     ```
     @Override
@@ -158,7 +159,7 @@ Collects value that is in the domain of the given partialFunction by mapping the
    * `assertThat(Option.<Integer>none().map(Function.identity()), is(Option.none()));`
    * **difference to java `Optional` map**: `assertThat(Optional.of(1).map(x -> null), is(Optional.empty()));`
 * `Option<T>	onEmpty(Runnable action)` - Runs a Java 
-`Runnable` passed as parameter if this Option is empty.
+`Runnable` passed as parameter if this `Option` is empty.
 * `Option<T>	orElse(Option<? extends T> other)`
 * `Option<T>	orElse(Supplier<? extends Option<? extends T>> supplier)`
 * `Option<T>	peek(Consumer<? super T> action)` - applies 
@@ -171,5 +172,5 @@ otherwise does nothing.
             return f.apply(this);
         }
     ```
-    it's like `map` but instead of operating directly on values
-    we have function `? super Option<T> -> U`
+    it is generalized `map` - instead of operating directly 
+    on values we have function `? super Option<T> -> U`.
