@@ -261,5 +261,16 @@ statements:
             return f.apply(this);
         }
     ```
-    it is generalized `map` - instead of operating directly 
-    on values we have function `? super Option<T> -> U`.
+    it is useful to transforming Optional in a collection:
+    ```
+    var collection = Option.of(1)
+            .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
+    
+    assertThat(collection, is(List.of(1)));
+    ```
+    ```
+    var collection = Option.<Integer>none()
+            .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
+    
+    assertThat(collection, is(empty()));
+    ```
