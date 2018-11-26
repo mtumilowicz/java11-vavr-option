@@ -108,4 +108,41 @@ Creates `Some` of value if condition is true, or `None` in other case
 ## instance
 * `Option<R>	collect(PartialFunction<? super T,? extends R> partialFunction)` - 
 Collects value that is in the domain of the given partialFunction by mapping the value to type R.
-* 
+* `boolean	equals(Object o)` - if `Some` call `equals` on values
+    ```
+    @Override
+    public boolean equals(Object obj) {
+        return (obj == this) || (obj instanceof Some && Objects.equals(value, ((Some<?>) obj).value));
+    }
+    ```
+* `Option<T>	filter(Predicate<? super T> predicate)`
+    ```
+    default Option<T> filter(Predicate<? super T> predicate) {
+        Objects.requireNonNull(predicate, "predicate is null");
+        return isEmpty() || predicate.test(get()) ? this : none();
+    }
+    ```
+    * `assertThat(Option.none().filter(x -> true), is(Option.none()));`
+    * `assertThat(Option.some(1).filter(x -> false), is(Option.none()));`
+    * `assertThat(Option.some(1).filter(x -> true), is(Option.of(1)));`
+* `Option<U>	flatMap(Function<? super T,? extends Option<? extends U>> mapper)`
+    ```
+    default <U> Option<U> flatMap(Function<? super T, ? extends Option<? extends U>> mapper) {
+        Objects.requireNonNull(mapper, "mapper is null");
+        return isEmpty() ? none() : (Option<U>) mapper.apply(get());
+    }
+    ```
+    * `assertThat(Option.of(Option.of(1)).flatMap(Function.identity()), is(Option.of(1)));`
+    * `assertThat(Option.of(Option.some(null)).flatMap(Function.identity()), is(Option.some(null)));`
+    * `assertThat(Option.none().flatMap(x -> null), is(Option.none()));`
+    * `assertNull(Option.of(1).flatMap(x -> null));`
+* `T	get()` - `NoSuchElementException` if `this` is a `None`.
+    * `assertNull(Option.some(null).get());`
+* `T	getOrElse(Supplier<? extends T> supplier)`
+* `T	getOrElse(T other)`
+* `<X extends Throwable> getOrElseThrow(Supplier<X> exceptionSupplier)`
+* `boolean	isDefined()`
+    * `assertTrue(Option.some(null).isDefined());`
+* `boolean	isEmpty()`
+* `Option<U>	map(Function<? super T,? extends U> mapper)`
+    * 
