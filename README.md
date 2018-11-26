@@ -162,6 +162,17 @@ Collects value that is in the domain of the given
 `Runnable` passed as parameter if this `Option` is empty.
 * `Option<T>	orElse(Option<? extends T> other)`
 * `Option<T>	orElse(Supplier<? extends Option<? extends T>> supplier)`
+    * `assertThat(Repository.findById(1).orElse(Repository.findByName("Michal")), is(Option.of("found-by-id")));`
+    * `assertThat(Repository.findById(1).orElse(Repository.findByName("Michal")), is(Option.of("found-by-name")));`
+    where `Repository`:
+    ```
+    static Option<String> findById(int id) {
+        return Option.when(id == 1, "found-by-id");
+    }
+    static Option<String> findByName(String name) {
+        return Option.when(Objects.equals(name, "Michal"), "found-by-name");
+    }
+    ```
 * `Option<T>	peek(Consumer<? super T> action)` - applies 
 an action to this value, if this option is defined, 
 otherwise does nothing. It is useful to construct `if-else`
