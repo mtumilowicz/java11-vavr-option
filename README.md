@@ -164,7 +164,47 @@ Collects value that is in the domain of the given
 * `Option<T>	orElse(Supplier<? extends Option<? extends T>> supplier)`
 * `Option<T>	peek(Consumer<? super T> action)` - applies 
 an action to this value, if this option is defined, 
-otherwise does nothing.
+otherwise does nothing. It is useful to construct `if-else`
+(`ifPresentOrElse` in `Optional API`)
+statements:
+    ```
+    AtomicBoolean invokedPeek = new AtomicBoolean();
+    AtomicBoolean invokedOnEmpty = new AtomicBoolean();
+    
+    Option.of(1).peek(x -> invokedPeek.set(true))
+            .onEmpty(() -> invokedOnEmpty.set(false));
+    
+    assertTrue(invokedPeek.get());
+    assertFalse(invokedOnEmpty.get());
+    ```
+    ```
+    AtomicBoolean invokedPeek = new AtomicBoolean();
+    AtomicBoolean invokedOnEmpty = new AtomicBoolean();
+    
+    Option.none().peek(x -> invokedPeek.set(true))
+            .onEmpty(() -> invokedOnEmpty.set(false));
+    
+    assertFalse(invokedPeek.get());
+    assertTrue(invokedOnEmpty.get());
+    ```
+    ```
+    AtomicBoolean invokedPeek = new AtomicBoolean();
+    
+    Integer value = Option.of(1).peek(x -> invokedPeek.set(true))
+            .getOrElse(-1);
+    
+    assertTrue(invokedPeek.get());
+    assertThat(value, is(1));
+    ```
+    ```
+    AtomicBoolean invokedPeek = new AtomicBoolean();
+    
+    Integer value = Option.<Integer>none().peek(x -> invokedPeek.set(true))
+            .getOrElse(-1);
+    
+    assertFalse(invokedPeek.get());
+    assertThat(value, is(-1));
+    ```
 * `U	transform(Function<? super Option<T>,? extends U> f)`
     ```
     U transform(Function<? super Option<T>, ? extends U> f) {
