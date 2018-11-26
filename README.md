@@ -129,6 +129,24 @@ Creates `Some` of value if condition is true, or `None` in other case
 * `Option<R>	collect(PartialFunction<? super T,? extends R> partialFunction)` - 
 Collects value that is in the domain of the given 
 `partialFunction` by mapping the value to type `R`.
+    * `assertThat(Option.of("a").collect(PartialFunctionExample.stringLength), is(Option.some(1)));`
+    * `assertThat(Option.of("b").collect(PartialFunctionExample.stringLength), is(Option.none()));`
+    where in `PartialFunction`:
+    ```
+    static PartialFunction<String, Integer> stringLength = new PartialFunction<>() {
+    
+        @Override
+        public Integer apply(String s) {
+            return isNull(s) ? 0 : s.length();
+        }
+    
+        @Override
+        public boolean isDefinedAt(String value) {
+            return Objects.equals("a", value);
+        }
+    };
+    ```
+
 * `boolean	equals(Object o)` - if `Some` call `equals` on values
     ```
     @Override
