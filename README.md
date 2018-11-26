@@ -171,3 +171,5 @@ otherwise does nothing.
             return f.apply(this);
         }
     ```
+    it's like `map` but instead of operating directly on values
+    we have function `? super Option<T> -> U`
