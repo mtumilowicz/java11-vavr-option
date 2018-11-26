@@ -136,6 +136,7 @@ Collects value that is in the domain of the given partialFunction by mapping the
     * `assertThat(Option.of(Option.some(null)).flatMap(Function.identity()), is(Option.some(null)));`
     * `assertThat(Option.none().flatMap(x -> null), is(Option.none()));`
     * `assertNull(Option.of(1).flatMap(x -> null));`
+    * **difference to java `Optional` flatMap**: `Optional.of(1).flatMap(x -> null);` throws NPE
 * `T	get()` - `NoSuchElementException` if `this` is a `None`.
     * `assertNull(Option.some(null).get());`
 * `T	getOrElse(Supplier<? extends T> supplier)`
@@ -145,4 +146,28 @@ Collects value that is in the domain of the given partialFunction by mapping the
     * `assertTrue(Option.some(null).isDefined());`
 * `boolean	isEmpty()`
 * `Option<U>	map(Function<? super T,? extends U> mapper)`
-    * 
+   ```
+   Option<U> map(Function<? super T, ? extends U> mapper) {
+           Objects.requireNonNull(mapper, "mapper is null");
+           return isEmpty() ? none() : some(mapper.apply(get()));
+       }
+   ```
+   * `assertThat(Option.some(null).map(Function.identity()), is(Option.some(null)));`
+   * `assertThat(Option.of(1).map(x -> null), is(Option.some(null)));`
+   * `assertThat(Option.of(1).map(Function.identity()), is(Option.some(1)));`
+   * `assertThat(Option.<Integer>none().map(Function.identity()), is(Option.none()));`
+   * **difference to java `Optional` map**: `assertThat(Optional.of(1).map(x -> null), is(Optional.empty()));`
+* `Option<T>	onEmpty(Runnable action)` - Runs a Java 
+`Runnable` passed as parameter if this Option is empty.
+* `Option<T>	orElse(Option<? extends T> other)`
+* `Option<T>	orElse(Supplier<? extends Option<? extends T>> supplier)`
+* `Option<T>	peek(Consumer<? super T> action)` - applies 
+an action to this value, if this option is defined, 
+otherwise does nothing.
+* `U	transform(Function<? super Option<T>,? extends U> f)`
+    ```
+    U transform(Function<? super Option<T>, ? extends U> f) {
+            Objects.requireNonNull(f, "f is null");
+            return f.apply(this);
+        }
+    ```
