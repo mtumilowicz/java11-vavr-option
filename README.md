@@ -47,7 +47,7 @@ Preserving this context means:
 It would break the Monad laws.**
 
 # project description
-We provide description and tests of Option methods.
+We provide description and tests of `Option` methods.
 
 ## static methods
 * `Option<T>	narrow(Option<? extends T> option)` - 
@@ -180,7 +180,7 @@ Collects value that is in the domain of the given
     * `assertNull(Option.some(null).get());`
 * `T	getOrElse(Supplier<? extends T> supplier)`
 * `T	getOrElse(T other)`
-* `<X extends Throwable> getOrElseThrow(Supplier<X> exceptionSupplier)`
+* `<X extends Throwable> T getOrElseThrow(Supplier<X> exceptionSupplier)`
 * `boolean	isDefined()`
     * `assertTrue(Option.some(null).isDefined());`
 * `boolean	isEmpty()`
