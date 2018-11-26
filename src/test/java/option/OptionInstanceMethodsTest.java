@@ -5,6 +5,7 @@ import io.vavr.control.Option;
 import org.junit.Test;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.function.Function;
 
 import static java.util.Objects.isNull;
@@ -108,6 +109,11 @@ public class OptionInstanceMethodsTest {
     public void flatMap_some_function_returns_null() {
         assertNull(Option.of(1).flatMap(x -> null));
     }
+
+    @Test(expected = NullPointerException.class)
+    public void optional_flatMap_some_function_returns_null() {
+        Optional.of(1).flatMap(x -> null);
+    }
     
     @Test
     public void get_some_null() {
@@ -123,9 +129,29 @@ public class OptionInstanceMethodsTest {
     public void isDefined_some_null() {
         assertTrue(Option.some(null).isDefined());
     }
-    
+
     @Test
     public void map_some_null() {
-        
+        assertThat(Option.some(null).map(Function.identity()), is(Option.some(null)));
+    }
+    
+    @Test
+    public void map_some_function_returns_null() {
+        assertThat(Option.of(1).map(x -> null), is(Option.some(null)));
+    }
+
+    @Test
+    public void optional_map_some_function_returns_null() {
+        assertThat(Optional.of(1).map(x -> null), is(Optional.empty()));
+    }
+
+    @Test
+    public void map_some() {
+        assertThat(Option.of(1).map(Function.identity()), is(Option.some(1)));
+    }
+
+    @Test
+    public void map_none() {
+        assertThat(Option.<Integer>none().map(Function.identity()), is(Option.none()));
     }
 }
