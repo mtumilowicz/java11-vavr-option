@@ -3,6 +3,8 @@ package option;
 import io.vavr.control.Option;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -11,6 +13,7 @@ import java.util.function.Function;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.junit.Assert.*;
 
 /**
@@ -172,5 +175,21 @@ public class OptionInstanceMethodsTest {
 
         assertFalse(invokedPeek.get());
         assertThat(value, is(-1));
+    }
+    
+    @Test
+    public void transform_isDefined() {
+        var collection = Option.of(1)
+                .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
+        
+        assertThat(collection, is(List.of(1)));
+    }
+
+    @Test
+    public void transform_isEmpty() {
+        var collection = Option.<Integer>none()
+                .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
+
+        assertThat(collection, is(empty()));
     }
 }
