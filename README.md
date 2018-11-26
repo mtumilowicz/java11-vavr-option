@@ -26,6 +26,24 @@ calling `.map` on a `None` will result in a `None`. In the
 Java `Optional` example above, that context changed from 
 a `Some` to a `None`.
 
+## controversies
+There are two functions that operate on Monads, 
+`map` and `flatMap`. These obey specific laws. 
+For this project it is sufficient to say that map has to 
+preserve the computational context of a value. For 
+context changes `flatMap` is used.
+
+The constructor `Option.of(value)` puts a value into a 
+computational context. If the value is `null`, the context 
+is `None`, otherwise the context is `Some`.
+
+Preserving this context means:
+* `Some(value).map(v -> otherValue) ~ Some(otherValue)`
+* `None().map(v -> otherValue) ~ None()`
+
+**We do not expect context changes when mapping values. 
+It would break the Monad laws.**
+
 # project description
 We provide description and tests of Option methods.
 
