@@ -261,7 +261,7 @@ statements:
             return f.apply(this);
         }
     ```
-    it is useful to transforming Optional in a collection:
+    it is useful to transform `Optional` into collection:
     ```
     var collection = Option.of(1)
             .transform(option -> option.map(List::of).getOrElse(Collections::emptyList));
