@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static java.util.Objects.isNull;
@@ -18,7 +19,7 @@ import static org.junit.Assert.*;
  * Created by mtumilowicz on 2018-11-22.
  */
 public class OptionInstanceMethodsTest {
-    
+
     @Test
     public void collect_isDefined() {
         PartialFunction<String, Integer> length = new PartialFunction<>() {
@@ -33,7 +34,7 @@ public class OptionInstanceMethodsTest {
                 return true;
             }
         };
-        
+
         assertThat(Option.of("a").collect(length), is(Option.some(1)));
     }
 
@@ -54,7 +55,7 @@ public class OptionInstanceMethodsTest {
 
         assertThat(Option.of("a").collect(length), is(Option.none()));
     }
-    
+
     @Test
     public void equals_none() {
         assertSame(Option.none(), Option.none());
@@ -69,12 +70,12 @@ public class OptionInstanceMethodsTest {
     public void equals_some_different_values() {
         assertThat(Option.of("a"), is(not((Option.of("b")))));
     }
-    
+
     @Test
     public void equals_when_values_have_bad_equals_method() {
         assertThat(Option.of(new BadEqualsOwner()), is(not((Option.of(new BadEqualsOwner())))));
     }
-    
+
     @Test
     public void filter_none() {
         assertThat(Option.none().filter(x -> true), is(Option.none()));
@@ -89,7 +90,7 @@ public class OptionInstanceMethodsTest {
     public void filter_some_fulfil() {
         assertThat(Option.some(1).filter(x -> true), is(Option.of(1)));
     }
-    
+
     @Test
     public void flatMap_some() {
         assertThat(Option.of(Option.of(1)).flatMap(Function.identity()), is(Option.of(1)));
@@ -104,7 +105,7 @@ public class OptionInstanceMethodsTest {
     public void flatMap_none_function_returns_null() {
         assertThat(Option.none().flatMap(x -> null), is(Option.none()));
     }
-    
+
     @Test
     public void flatMap_some_function_returns_null() {
         assertNull(Option.of(1).flatMap(x -> null));
@@ -114,7 +115,7 @@ public class OptionInstanceMethodsTest {
     public void optional_flatMap_some_function_returns_null() {
         Optional.of(1).flatMap(x -> null);
     }
-    
+
     @Test
     public void get_some_null() {
         assertNull(Option.some(null).get());
@@ -124,7 +125,7 @@ public class OptionInstanceMethodsTest {
     public void get_none() {
         assertNull(Option.none().get());
     }
-    
+
     @Test
     public void isDefined_some_null() {
         assertTrue(Option.some(null).isDefined());
@@ -134,7 +135,7 @@ public class OptionInstanceMethodsTest {
     public void map_some_null() {
         assertThat(Option.some(null).map(Function.identity()), is(Option.some(null)));
     }
-    
+
     @Test
     public void map_some_function_returns_null() {
         assertThat(Option.of(1).map(x -> null), is(Option.some(null)));
@@ -153,5 +154,51 @@ public class OptionInstanceMethodsTest {
     @Test
     public void map_none() {
         assertThat(Option.<Integer>none().map(Function.identity()), is(Option.none()));
+    }
+
+    @Test
+    public void peek_onEmpty_isDefined() {
+        AtomicBoolean invokedPeek = new AtomicBoolean();
+        AtomicBoolean invokedOnEmpty = new AtomicBoolean();
+
+        Option.of(1).peek(x -> invokedPeek.set(true))
+                .onEmpty(() -> invokedOnEmpty.set(true));
+
+        assertTrue(invokedPeek.get());
+        assertFalse(invokedOnEmpty.get());
+    }
+
+    @Test
+    public void peek_onEmpty_isEmpty() {
+        AtomicBoolean invokedPeek = new AtomicBoolean();
+        AtomicBoolean invokedOnEmpty = new AtomicBoolean();
+
+        Option.none().peek(x -> invokedPeek.set(true))
+                .onEmpty(() -> invokedOnEmpty.set(true));
+
+        assertFalse(invokedPeek.get());
+        assertTrue(invokedOnEmpty.get());
+    }
+
+    @Test
+    public void peek_orElse_isDefined() {
+        AtomicBoolean invokedPeek = new AtomicBoolean();
+
+        Integer value = Option.of(1).peek(x -> invokedPeek.set(true))
+                .getOrElse(-1);
+
+        assertTrue(invokedPeek.get());
+        assertThat(value, is(1));
+    }
+
+    @Test
+    public void peek_orElse_isEmpty() {
+        AtomicBoolean invokedPeek = new AtomicBoolean();
+
+        Integer value = Option.<Integer>none().peek(x -> invokedPeek.set(true))
+                .getOrElse(-1);
+
+        assertFalse(invokedPeek.get());
+        assertThat(value, is(-1));
     }
 }
