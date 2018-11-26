@@ -1,6 +1,5 @@
 package option;
 
-import io.vavr.PartialFunction;
 import io.vavr.control.Option;
 import org.junit.Test;
 
@@ -9,7 +8,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
-import static java.util.Objects.isNull;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,39 +19,13 @@ import static org.junit.Assert.*;
 public class OptionInstanceMethodsTest {
 
     @Test
-    public void collect_isDefined() {
-        PartialFunction<String, Integer> length = new PartialFunction<>() {
-
-            @Override
-            public Integer apply(String s) {
-                return isNull(s) ? 0 : s.length();
-            }
-
-            @Override
-            public boolean isDefinedAt(String value) {
-                return true;
-            }
-        };
-
-        assertThat(Option.of("a").collect(length), is(Option.some(1)));
+    public void collect_value_isDefined_inDomain() {
+        assertThat(Option.of("a").collect(PartialFunctionExample.stringLength), is(Option.some(1)));
     }
 
     @Test
-    public void collect_isNotDefined() {
-        PartialFunction<String, Integer> length = new PartialFunction<>() {
-
-            @Override
-            public Integer apply(String s) {
-                return isNull(s) ? 0 : s.length();
-            }
-
-            @Override
-            public boolean isDefinedAt(String value) {
-                return false;
-            }
-        };
-
-        assertThat(Option.of("a").collect(length), is(Option.none()));
+    public void collect_isNotDefined_inDomain() {
+        assertThat(Option.of("b").collect(PartialFunctionExample.stringLength), is(Option.none()));
     }
 
     @Test
