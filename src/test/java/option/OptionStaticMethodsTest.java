@@ -15,23 +15,23 @@ import static org.junit.Assert.*;
  * Created by mtumilowicz on 2018-11-22.
  */
 public class OptionStaticMethodsTest {
-    
+
     @Test
     public void narrow() {
         Option<String> a = Option.of("a");
-        
+
         Option<CharSequence> narrowed = Option.narrow(a);
-        
+
         assertThat(narrowed.get(), is("a"));
     }
-    
+
     @Test
     public void narrow_null() {
         Option<String> a = null;
 
         assertNull(Option.narrow(a));
     }
-    
+
     @Test(expected = NoSuchElementException.class)
     public void none_get() {
         Option.none().get();
@@ -41,7 +41,7 @@ public class OptionStaticMethodsTest {
     public void none_instanceof() {
         assertTrue(Option.none() instanceof Option.None);
     }
-    
+
     @Test
     public void none_singleton() {
         assertSame(Option.none(), Option.none());
@@ -53,18 +53,18 @@ public class OptionStaticMethodsTest {
 
         assertThat(option.get(), is("a"));
     }
-    
+
     @Test
     public void of_null() {
         Option<Object> option = Option.of(null);
-        
+
         assertTrue(option.isEmpty());
     }
-    
+
     @Test
     public void sequence_withNone() {
         Option<Seq<String>> sequence = Option.sequence(List.of(Option.of("a"), Option.of("b"), Option.none()));
-        
+
         assertTrue(sequence.isEmpty());
     }
 
@@ -75,7 +75,7 @@ public class OptionStaticMethodsTest {
         assertTrue(sequence.isDefined());
         assertTrue(sequence.get().eq(List.of("a", "b")));
     }
-    
+
     @Test
     public void some_null_isDefined() {
         Option<Object> some = Option.some(null);
@@ -90,7 +90,7 @@ public class OptionStaticMethodsTest {
 
         assertTrue(some instanceof Option.Some);
     }
-    
+
     @Test
     public void when_false() {
         Option<Integer> when = Option.when(false, 1);
@@ -102,15 +102,26 @@ public class OptionStaticMethodsTest {
         Option<Integer> when = Option.when(true, 1);
         assertTrue(when.isDefined());
     }
-    
+
     @Test
     public void when_null() {
         Option<Integer> when = Option.when(true, (Integer) null);
         assertTrue(when.isDefined());
     }
-    
+
     @Test(expected = NullPointerException.class)
     public void ofOptional_null() {
         Option.ofOptional(null);
     }
+
+    @Test
+    public void orElse_isDefined() {
+        assertThat(Repository.findById(1).orElse(Repository.findByName("Michal")), is(Option.of("found-by-id")));
+    }
+
+    @Test
+    public void orElse_isEmpty() {
+        assertThat(Repository.findById(2).orElse(Repository.findByName("Michal")), is(Option.of("found-by-name")));
+    }
+
 }
