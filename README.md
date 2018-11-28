@@ -274,3 +274,7 @@ statements:
     
     assertThat(collection, is(empty()));
     ```
+    **note that you could simply use**:
+    ```
+    Option.of(1).map(List::of).getOrElse(Collections::emptyList);
+    ```
